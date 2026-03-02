@@ -37,6 +37,7 @@ export const App: React.FC = () => {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const load = () => {
     setLoading(true);
     getTodos()
@@ -73,7 +74,7 @@ export const App: React.FC = () => {
   React.useEffect(() => {
     load();
     newTodoRef.current?.focus();
-  }, []);
+  }, [load]);
 
   if (!USER_ID) {
     return <UserWarning />;
