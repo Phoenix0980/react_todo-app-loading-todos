@@ -1,33 +1,20 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React from 'react';
+import React, { useState } from 'react';
 import { UserWarning } from './UserWarning';
-import { USER_ID, getTodos } from './api/todos';
+import { USER_ID } from './api/todos';
 import { Todo } from './types/Todo';
 
 export const App: React.FC = () => {
-  const [todos, setTodos] = React.useState<Todo[]>([]);
-  const [, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string>('');
-  const [filter, setFilter] = React.useState<'all' | 'active' | 'completed'>(
-    'all',
-  );
+  const [todos] = useState<Todo[]>([]);
+  const [] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
 
   const newTodoRef = React.useRef<HTMLInputElement>(null);
   const errorTimeoutRef = React.useRef<number | null>(null);
 
   // helper for error notifications
-  const showError = (message: string) => {
-    setError(message);
-    if (errorTimeoutRef.current) {
-      clearTimeout(errorTimeoutRef.current);
-    }
-
-    errorTimeoutRef.current = window.setTimeout(() => {
-      setError('');
-      errorTimeoutRef.current = null;
-    }, 3000);
-  };
 
   const hideError = () => {
     setError('');
@@ -38,19 +25,6 @@ export const App: React.FC = () => {
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const load = () => {
-    setLoading(true);
-    getTodos()
-      .then(result => {
-        setTodos(result);
-      })
-      .catch(() => {
-        showError('Unable to load todos');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
 
   // read filter from hash
   React.useEffect(() => {
@@ -72,9 +46,8 @@ export const App: React.FC = () => {
 
   // initial load and focus
   React.useEffect(() => {
-    load();
     newTodoRef.current?.focus();
-  }, [load]);
+  });
 
   if (!USER_ID) {
     return <UserWarning />;
